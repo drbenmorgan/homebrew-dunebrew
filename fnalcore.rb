@@ -14,6 +14,7 @@ class Fnalcore < Formula
     ENV.cxx11
     args = std_cmake_args
     args << "-DCMAKE_PREFIX_PATH=#{prefix}"
+    args << "-DCMAKE_INSTALL_RPATH=#{lib}"
     args << "-DFNALCore_BUILD_DOCS=OFF" if build.without? "docs" 
     system "cmake", ".", *args
     system "make", "install"
