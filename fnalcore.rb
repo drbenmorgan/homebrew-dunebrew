@@ -3,12 +3,12 @@ require "formula"
 class Fnalcore < Formula
   url "https://github.com/LBNE/FNALCore.git", :tag => "v0.1.0"
 
-  option 'with-docs', 'Install HTML docs'
+  option 'with-docs', 'Install FNALCore HTML docs'
 
   depends_on "cmake" => :build
+  depends_on "doxygen" => :build if build.with? "docs"
   depends_on "boost" => "c++11"
   depends_on "sqlite"
-  depends_on "doxygen" => [:build, "with-docs"]
 
   def install
     ENV.cxx11
