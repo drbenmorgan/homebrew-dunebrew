@@ -1,7 +1,7 @@
 require "formula"
 
 class Fnalcore < Formula
-  url "https://github.com/LBNE/FNALCore.git", :tag => "v0.1.0"
+  url "https://github.com/LBNE/FNALCore.git", :tag => "1.13.01"
 
   option 'with-docs', 'Install FNALCore HTML docs'
 
