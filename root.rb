@@ -13,26 +13,43 @@ class Root < Formula
    depends_on "gsl" => :recommended
 
    option :cxx11
+   depends_on "python" => :optional
+
 
    def install
      mkdir "hb-root-build" do
-       args = %W[
-         --prefix=#{prefix}
-         --etcdir=#{prefix}/etc/root
-         --libdir=#{prefix}/lib
-         --mandir=#{man}
-       ]
+       #args = %W[
+       #  --prefix=#{prefix}
+       #  --etcdir=#{prefix}/etc/root
+       #  --libdir=#{prefix}/lib
+       #  --mandir=#{man}
+       #  --with-cc=#{ENV.cc}
+       #  --with-cxx=#{ENV.cxx}
+       #  --with-f77=/dev/null
+       #]
 
-       args << "--enable-cxx11" if build.cxx11?
-       args << "--enable-libcxx" if OS.mac?
-       args << "--enable-rpath"
-       args << "--enable-soversion"
-       args << "--enable-ssl"
-       args << "--enable-sqlite"
+       #args << "--enable-cxx11" if build.cxx11?
+       #args << "--enable-libcxx" if OS.mac?
+       #args << "--enable-rpath"
+       #args << "--enable-soversion"
+       #args << "--enable-ssl"
+       #args << "--enable-sqlite"
+       #args << "--enable-python" if build.with? "python" 
+       #args << "--enable-mathmore" if build.with? "gsl"
 
-       args << "--enable-mathmore" if build.with? "gsl"
+       #system "../configure", *args
 
-       system "../configure", *args
+       ENV.cxx11 if build.cxx11?
+
+       args = std_cmake_args
+       args << "-DCMAKE_INSTALL_CMAKEDIR=share/root"
+       args << "-Dcxx11=ON" if build.cxx11?
+       args << "-Dlibcxx=ON" if OS.mac?
+       args << "-Dpython=OFF" unless build.with? "python"
+       args << "-Dmathmore=OFF" unless build.with? "gsl"
+       args << "-Dsoversion=ON"
+
+       system "cmake", "../", *args
        system "make"
        system "make", "install"
      end
