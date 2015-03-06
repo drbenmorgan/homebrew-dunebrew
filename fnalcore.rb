@@ -2,6 +2,7 @@ require "formula"
 
 class Fnalcore < Formula
   url "https://github.com/LBNE/FNALCore.git", :tag => "1.13.01"
+  head "https://github.com/LBNE/FNALCore.git", :branch => "feature/cxx11-adaption"
 
   option 'with-docs', 'Install FNALCore HTML docs'
 
@@ -15,6 +16,7 @@ class Fnalcore < Formula
     args = std_cmake_args
     args << "-DCMAKE_PREFIX_PATH=#{prefix}"
     args << "-DCMAKE_INSTALL_RPATH=#{lib}"
+    args << "-DCMAKE_INSTALL_LIBDIR=lib"
     args << "-DFNALCore_BUILD_DOCS=OFF" if build.without? "docs" 
     system "cmake", ".", *args
     system "make", "install"
