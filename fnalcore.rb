@@ -1,13 +1,15 @@
 require "formula"
 
 class Fnalcore < Formula
-  url "https://github.com/LBNE/FNALCore.git", :tag => "1.13.01"
-  head "https://github.com/LBNE/FNALCore.git", :branch => "feature/cxx11-adaption"
-
-  option 'with-docs', 'Install FNALCore HTML docs'
-
+  url "https://github.com/LBNE/FNALCore.git", :branch => "develop", :revision => "e1df99344d"
+  version "1.13.1"
+  head "https://github.com/LBNE/FNALCore.git", :branch => "develop"
+  
   depends_on "cmake" => :build
-  depends_on "doxygen" => :build if build.with? "docs"
+
+  depends_on "doxygen" => [:optional, :build]
+  option 'with-doxygen', 'Install FNALCore HTML docs'
+
   depends_on "boost" => "c++11"
   depends_on "sqlite"
 
@@ -17,7 +19,7 @@ class Fnalcore < Formula
     args << "-DCMAKE_PREFIX_PATH=#{prefix}"
     args << "-DCMAKE_INSTALL_RPATH=#{lib}"
     args << "-DCMAKE_INSTALL_LIBDIR=lib"
-    args << "-DFNALCore_BUILD_DOCS=OFF" if build.without? "docs" 
+    args << "-DFNALCore_BUILD_DOCS=OFF" if build.without? "doxygen" 
     system "cmake", ".", *args
     system "make", "install"
   end
