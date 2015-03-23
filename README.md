@@ -1,16 +1,15 @@
 homebrew-devtools
 =================
 
-Homebrew formulae for LBNE development tools. Tested on Macbrew only,
-bu intended to also work with Linuxbrew.
+Homebrew formulae for DUNE software. Tested on Macbrew only, but intended to also work with Linuxbrew.
 
-To use this tap, first [install Homebrew](https://github.com/Homebrew/homebrew), then add the tap:
+To use this tap, first [install Homebrew](https://github.com/Homebrew/homebrew) for Mac, or [install Linuxbrew](https://github.com/Homebrew/linuxbrew), then add the tap:
 
 ```sh
-$ brew tap drbenmorgan/devtools
+$ brew tap drbenmorgan/dune
 ```
 
-At present there is only one Formula, [FNALCore](https://github.com/LBNE/FNALCore), which can be install like other Formulae:
+At present there is only one Formula, [FNALCore](https://github.com/LBNE/FNALCore), which can be installed like other Formulae:
 
 ```
 $ brew install fnalcore
