@@ -14,9 +14,14 @@ class DuneToolchain < Formula
   depends_on "automake"
   depends_on "libtool"
 
+  # Use explicit python dep rather than ':python'
+  # because latter gets built *before* gcc if
+  # not satisfied
   depends_on "python"
-  depends_on "cmake"
-  depends_on "gccxml"
+
+  # Vendor our own CMake and gccxml
+  depends_on "drbenmorgan/dunebrew/cmake"
+  depends_on "drbenmorgan/dunebrew/gccxml"
 
   def install
     bin.mkdir
