@@ -1,15 +1,26 @@
 class Root < Formula
    homepage "http://root.cern.ch"
    version "5.34.26"
+   revision 1
    sha1 "f9013c37c37946b79dce777d731ccb64e5b28bb8"
    url "ftp://root.cern.ch/root/root_v#{version}.source.tar.gz"
    mirror "http://ftp.riken.jp/pub/ROOT/root_v#{version}.source.tar.gz"
    head "https://github.com/root-mirror/root.git", :branch => "v5-34-00-patches"
 
-   patch :DATA
+   # Patches
+   patch do
+     url "https://raw.githubusercontent.com/drbenmorgan/homebrew-dunebrew/master/root_rpath_patch.diff"
+     sha1 "f410316b8c57c1b0b0244801dea8e384a76b8b71"
+   end
+
+   patch do
+     url "https://raw.githubusercontent.com/drbenmorgan/homebrew-dunebrew/master/root_shared_linker_flags_patch.diff"
+     sha1 "5744be6245e0e5d8d78a5807eda06e818782cad8"
+   end
 
    depends_on "cmake" => :build
    depends_on "gsl" => :recommended
+   depends_on "openssl"
 
    option :cxx11
    depends_on "python" => :optional
@@ -39,68 +50,3 @@ class Root < Formula
      end
    end
 end
-__END__
-diff --git a/cmake/modules/RootBuildOptions.cmake b/cmake/modules/RootBuildOptions.cmake
-index a89bb53..a09967b 100644
---- a/cmake/modules/RootBuildOptions.cmake
-+++ b/cmake/modules/RootBuildOptions.cmake
-@@ -8,7 +8,7 @@ function(ROOT_BUILD_OPTION name defvalue)
-     set(description ${ARGN})
-   else()
-     set(description " ")
--  endif()    
-+  endif()
-   option(${name} "${description}" ${defvalue})
-   set(root_build_options ${root_build_options} ${name} PARENT_SCOPE )
- endfunction()
-@@ -184,7 +184,7 @@ ROOT_BUILD_OPTION(xft ON "Xft support (X11 antialiased fonts)")
- ROOT_BUILD_OPTION(xml ON "XML parser interface")
- ROOT_BUILD_OPTION(x11 ${x11_defvalue} "X11 support")
- ROOT_BUILD_OPTION(xrootd ON "Build xrootd file server and its client (if supported)")
--  
-+
- option(fail-on-missing "Fail the configure step if a required external package is missing" OFF)
- option(minimal "Do not automatically search for support libraries" OFF)
- option(gminimal "Do not automatically search for support libraries, but include X11" OFF)
-@@ -196,21 +196,6 @@ if(DEFINED c++11)   # For backward compatibility
-   set(cxx11 ${c++11} CACHE BOOL "" FORCE)
- endif()
- 
--#---General Build options----------------------------------------------------------------------
--# use, i.e. don't skip the full RPATH for the build tree
--set(CMAKE_SKIP_BUILD_RPATH  FALSE)
--# when building, don't use the install RPATH already (but later on when installing)
--set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) 
--# add the automatically determined parts of the RPATH
--# which point to directories outside the build tree to the install RPATH
--set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
--
--# the RPATH to be used when installing---------------------------------------------------------
--if(rpath)
--  set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
--  set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE) 
--endif()
--
- #---Avoid creating dependencies to 'non-statndard' header files -------------------------------
- include_regular_expression("^[^.]+$|[.]h$|[.]icc$|[.]hxx$|[.]hpp$")
- 
-@@ -236,6 +221,21 @@ endif()
- #---Add Installation Variables------------------------------------------------------------------
- include(RootInstallDirs)
- 
-+#---General Build options----------------------------------------------------------------------
-+# use, i.e. don't skip the full RPATH for the build tree
-+set(CMAKE_SKIP_BUILD_RPATH  FALSE)
-+# when building, don't use the install RPATH already (but later on when installing)
-+set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
-+# add the automatically determined parts of the RPATH
-+# which point to directories outside the build tree to the install RPATH
-+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-+
-+# the RPATH to be used when installing---------------------------------------------------------
-+if(rpath)
-+  set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}")
-+  set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-+endif()
-+
-
